@@ -10,10 +10,14 @@ $users = [
 
 $request = $_SERVER['REQUEST_URI'];
 
-if ($request == "/users") {
+$path = parse_url($request, PHP_URL_PATH);
+
+if ($path == "/users") {
+
     echo json_encode($users);
+
 }
-else if (preg_match("/\/users\/(\d+)/",$request,$matches)) {
+elseif (preg_match("#^/users/(\d+)$#", $path, $matches)) {
 
     $id = $matches[1];
 
@@ -25,7 +29,16 @@ else if (preg_match("/\/users\/(\d+)/",$request,$matches)) {
     }
 
     echo json_encode(["message"=>"User not found"]);
+
 }
 else{
-    echo json_encode(["message"=>"API working"]);
+
+    echo json_encode([
+        "message"=>"API running",
+        "routes"=>[
+            "/users",
+            "/users/{id}"
+        ]
+    ]);
+
 }
