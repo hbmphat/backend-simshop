@@ -8,18 +8,15 @@ $users = [
     ["id"=>3,"name"=>"Chi"]
 ];
 
-$request = $_SERVER['REQUEST_URI'];
+$route = $_GET['route'] ?? null;
+$id = $_GET['id'] ?? null;
 
-$path = parse_url($request, PHP_URL_PATH);
-
-if ($path == "/users") {
+if ($route == "users" && !$id) {
 
     echo json_encode($users);
 
 }
-elseif (preg_match("#^/users/(\d+)$#", $path, $matches)) {
-
-    $id = $matches[1];
+elseif ($route == "users" && $id) {
 
     foreach ($users as $user){
         if($user["id"] == $id){
@@ -34,10 +31,10 @@ elseif (preg_match("#^/users/(\d+)$#", $path, $matches)) {
 else{
 
     echo json_encode([
-        "message"=>"API running",
+        "message"=>"API working",
         "routes"=>[
-            "/users",
-            "/users/{id}"
+            "/?route=users",
+            "/?route=users&id=1"
         ]
     ]);
 
