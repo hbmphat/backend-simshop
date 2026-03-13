@@ -2,15 +2,30 @@
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 
-$data = [
-    [
-        "number" => "0988888888",
-        "price" => "3500000"
-    ],
-    [
-        "number" => "0916668888",
-        "price" => "2800000"
-    ]
+$users = [
+    ["id"=>1,"name"=>"An"],
+    ["id"=>2,"name"=>"Bình"],
+    ["id"=>3,"name"=>"Chi"]
 ];
 
-echo json_encode($data);
+$request = $_SERVER['REQUEST_URI'];
+
+if ($request == "/users") {
+    echo json_encode($users);
+}
+else if (preg_match("/\/users\/(\d+)/",$request,$matches)) {
+
+    $id = $matches[1];
+
+    foreach ($users as $user){
+        if($user["id"] == $id){
+            echo json_encode($user);
+            exit;
+        }
+    }
+
+    echo json_encode(["message"=>"User not found"]);
+}
+else{
+    echo json_encode(["message"=>"API working"]);
+}
